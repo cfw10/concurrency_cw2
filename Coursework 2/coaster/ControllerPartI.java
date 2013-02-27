@@ -14,8 +14,8 @@ public class Controller {
 	int numPass = 0; 
 	private final Object platLock = new Object();
 	private final Object carLock = new Object();
+	// declarations required
 
-	boolean leave = false;
 
 	public Controller(NumberCanvas nc) {
 		passengers = nc;
@@ -38,33 +38,23 @@ public class Controller {
 	}
 
 	public int getPassengers(int mcar) throws InterruptedException {
-		int passInCar = 0;
-		while (((numPass < mcar) && !(leave)) || (numPass == 0)){
+		// complete implementation for part I
+		// update for part II
+		// use "passengers.setValue(integer value)" to update diplay
+		while (numPass < mcar){
 			synchronized (carLock){
 				carLock.wait();
 			}
 		}
-		if ((numPass < mcar) && (leave)){
-			passInCar = numPass;
-			numPass = 0;
-		}
-		else{
-			passInCar = mcar;
-			numPass -= mcar;
-		}
-		leave = false;
-		passengers.setValue(numPass);				
+		passengers.setValue((numPass -= mcar));
 		synchronized (platLock){
 			platLock.notify();
 		}
-		return passInCar; // dummy value to allow compilation
+		return mcar; // dummy value to allow compilation
 	}
 
 	public synchronized void goNow() {
-		synchronized (carLock){
-			leave = true;
-			carLock.notify();
-		}
+		// complete implementation for part II
 	}
 
 }
