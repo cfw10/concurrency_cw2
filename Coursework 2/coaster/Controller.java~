@@ -41,7 +41,7 @@ public class Controller {
 				carpassLock.wait();
 			}
 		}
-		assengers.setValue((numPass -= mcar));
+		passengers.setValue((numPass -= mcar));
 		return mcar; // dummy value to allow compilation
 	}
 

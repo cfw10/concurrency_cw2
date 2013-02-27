@@ -6,14 +6,24 @@
 
 public class PlatformAccess {
 
-  /* declarations required */
+	/* declarations required */
+	boolean carHere = false;
+	private final Object platLock = new Object();
 
-  public void arrive() throws InterruptedException {
-    // complete implementation
-  }
+	public void arrive() throws InterruptedException {
+		if (carHere){
+			synchronized (platLock){
+				platLock.wait();
+			}
+		}
+		carHere = true;
+	}
 
-  public synchronized void depart() {
-    // complete implementation
-  }
+	public synchronized void depart() {
+		synchronized (platLock){
+			platLock.notify();
+		}
+		carHere = false;
+	}
 
 }

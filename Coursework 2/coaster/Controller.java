@@ -12,8 +12,8 @@ public class Controller {
 	protected NumberCanvas passengers;
 
 	int numPass = 0; 
-	private final Object passLock = new Object();
-	private final Object carpassLock = new Object();
+	private final Object platLock = new Object();
+	private final Object carLock = new Object();
 	// declarations required
 
 
@@ -26,9 +26,14 @@ public class Controller {
 		// complete implementation
 		// use "passengers.setValue(integer value)" to update diplay
 		//while (numPass == Max){/*wait for the number of passengers to be lass than the maximum the platform can hold*/}
-		passengers.setValue(++numPass);
-		synchronized (carpassLock){
-			carpassLock.notify();
+		while (numPass >= Max){
+			synchronized (platLock){
+				platLock.wait();
+			}
+		}
+		passengers.setValue(++numPass);	
+		synchronized (carLock){
+			carLock.notify();
 		}
 	}
 
@@ -37,11 +42,14 @@ public class Controller {
 		// update for part II
 		// use "passengers.setValue(integer value)" to update diplay
 		while (numPass < mcar){
-			synchronized (carpassLock){
-				carpassLock.wait();
+			synchronized (carLock){
+				carLock.wait();
 			}
 		}
 		passengers.setValue((numPass -= mcar));
+		synchronized (platLock){
+			platLock.notify();
+		}
 		return mcar; // dummy value to allow compilation
 	}
 
